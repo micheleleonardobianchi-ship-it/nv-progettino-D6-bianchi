@@ -136,7 +136,7 @@ sudo pluma /var/lib/docker/volumes/progettino_dati-app/_data/clean/data_clean_<t
 docker compose exec db psql -U user -d mydatabase
 ```
 
-esegendo la query `SELECT count(*) FROM tdata`
+eseguendo la query `SELECT count(*) FROM tdata`
 
 **Output atteso:**  
 presenza di dati nel DB.
