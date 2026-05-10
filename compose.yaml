@@ -1,0 +1,61 @@
+services:
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d mydatabase"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - dati-db:/var/lib/postgresql/data
+
+  extract:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.extract
+    volumes:
+      - dati-app:/app/data
+
+  transform:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.transform
+    depends_on:
+      extract:
+        condition: service_completed_successfully
+    volumes:
+      - dati-app:/app/data
+
+  load:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.load
+    depends_on:
+      db:
+        condition: service_healthy
+      transform:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: "postgresql://user:password@db:5432/mydatabase"
+    volumes:
+      - dati-app:/app/data
+
+  verify:
+    image: postgres:15
+    depends_on:
+      load:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+    entrypoint: >
+      psql postgresql://user:password@db:5432/mydatabase
+      -c "SELECT count(*) FROM tdata;"
+
+volumes:
+  dati-app:
+  dati-db:

@@ -1,0 +1,28 @@
+FROM python:3.12-alpine
+
+# Installiamo Chromium e i driver necessari per Alpine
+RUN apk add --no-cache \
+    chromium \
+    chromium-chromedriver \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+WORKDIR /app
+
+COPY extract/requirements_extract.txt .
+RUN pip install --no-cache-dir -r requirements_extract.txt
+
+COPY logger_config.py .
+COPY extract/extractData.py .
+
+# Variabili d'ambiente per dire a Selenium dove si trova Chromium
+ENV CHROME_BIN=/usr/bin/chromium-browser \
+    CHROME_PATH=/usr/lib/chromium/
+
+EXPOSE 5000
+
+CMD ["python", "extractData.py"]
+

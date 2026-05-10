@@ -1,0 +1,14 @@
+FROM python:3.12-alpine
+
+WORKDIR /app
+
+COPY transform/requirements_transform.txt .
+RUN pip install --no-cache-dir -r requirements_transform.txt
+
+COPY logger_config.py .
+COPY transform/transformData.py .
+
+EXPOSE 5000
+
+CMD ["python", "transformData.py"]
+

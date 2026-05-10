@@ -1,0 +1,12 @@
+FROM python:3.12-alpine
+
+WORKDIR /app
+
+COPY load/requirements_load.txt .
+RUN pip install --no-cache-dir -r requirements_load.txt
+
+COPY logger_config.py .
+COPY load/loadData.py .
+
+CMD ["python", "loadData.py"]
+
