@@ -167,8 +167,8 @@ Si rimanda alla cartella `screenshots`.
 
 Durante lo sviluppo della pipeline ETL sono emersi diversi aspetti critici legati sia all’architettura sia alla gestione dei dati.
 
-### Gestione dei file
-La creazione di sottocartelle semplifica la struttura ma rende più articolata la preparazione degli script.
+### Gestione dei file e dei nomi
+La creazione di sottocartelle semplifica la struttura ma rende più articolata la preparazione degli script. Nel DB il nome delle tavole deve essere in minuscolo (`tdata`) e non in maiuscolo (`TDATA`).
 
 ### Orchestrazione dei container
 È stato necessario introdurre uno step di verifica nel `compose.yaml` per eseguire la query di test solo dopo la completa esecuzione del container `load`. Questo ha risolto problemi di sincronizzazione tra servizi.
@@ -177,13 +177,13 @@ La creazione di sottocartelle semplifica la struttura ma rende più articolata l
 La suddivisione dello scraping in più file fasi migliorerebbe la gestione del processo: data una obbligazione (ISIN) bisognerebbe prima creare una file in cui raccogliere il numero di pagine da visitare e poi avviare lo scarico dei dati, eventualmente anche utilizzando più container per lo scarico dei dati. 
 
 ### Duplicati
-È emersa la presenza di dati duplicati dovuta a scarichi, trasformazioni o caricamenti ripetuti (ad esempio, se si avvia `setup.sh` più di una volta). Questo richiederebbe una modifica a livello di gestione di file oppure in fase di caricamento nel DB. Nella presente versione vengono sono riportati nella tavola del DB `tdata` i timestamp relativi a ciscuno dei tre servizi.
+È emersa la presenza di dati duplicati dovuta a scarichi, trasformazioni o caricamenti ripetuti (ad esempio, se si avvia `setup.sh` più di una volta). Questo richiederebbe una modifica a livello di gestione di file oppure in fase di inserimento nel DB. Nella presente versione sono riportati nella tavola del DB `tdata` i timestamp relativi a ciscuno dei tre servizi.
 
 Strategie alternative:
 
 - sovrascrittura dei dati (ma si rischia di perdere dati se uno dei volumi viene meno)
 - accodamento (storico completo ma richiede controllo duplicati)
-- inserimento con controlli in `load`
+- inserimento con controlli in fase di inserimento `load`
 
 ---
 
