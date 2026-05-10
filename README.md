@@ -13,7 +13,7 @@ Master in Data Science per la Pubblica Amministrazione (a.a. 2025/2026, prof. St
 
 **Codice variante:** D6
 
-**Repo:** https://github.com/.../nv-progettino-A1-rossi
+**Repo:** https://github.com/micheleleonardobianchi-ship-it/nv-progettino-D6-bianchi
 
 ---
 
